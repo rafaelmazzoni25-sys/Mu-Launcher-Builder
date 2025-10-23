@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherCS", "LauncherCS.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherBuilderCS", "..\\LauncherBuilderCS\\LauncherBuilderCS.csproj", "{20AC4B89-0633-4538-9DC9-13BC72EFE7CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherCore", "..\\LauncherCore\\LauncherCore.csproj", "{7958183A-81C5-416A-B374-DE7BFF89B1B7}"
+EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
         Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
         {20AC4B89-0633-4538-9DC9-13BC72EFE7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {20AC4B89-0633-4538-9DC9-13BC72EFE7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {20AC4B89-0633-4538-9DC9-13BC72EFE7CA}.Release|Any CPU.Build.0 = Release|Any CPU
+        {7958183A-81C5-416A-B374-DE7BFF89B1B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {7958183A-81C5-416A-B374-DE7BFF89B1B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {7958183A-81C5-416A-B374-DE7BFF89B1B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {7958183A-81C5-416A-B374-DE7BFF89B1B7}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
     GlobalSection(SolutionProperties) = preSolution
         HideSolutionNode = FALSE

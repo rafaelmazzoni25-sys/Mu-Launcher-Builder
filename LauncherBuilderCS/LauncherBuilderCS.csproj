@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="MainForm.cs" />
+    <Compile Include="GeneralOptions.cs" />
+    <Compile Include="SkinOptions.cs" />
+    <Compile Include="Attributes\FilePathAttribute.cs" />
+    <Compile Include="Services\LauncherBuilderService.cs" />
+    <Compile Include="Services\OptionXmlBuilder.cs" />
+    <Compile Include="Services\SkinBuilder.cs" />
+    <Compile Include="Services\ResourceEncoder.cs" />
+    <Compile Include="Services\DefaultSkinData.cs" />
+    <Compile Include="Services\DefaultSkinResourceProvider.cs" />
+    <Compile Include="Services\LauncherConfigurationBuilder.cs" />
+    <Compile Include="Services\UpdatePackageBuilder.cs" />
+    <Compile Include="Controls\UpdateBuilderControl.cs" />
+    <Compile Include="Controls\UpdateProgress.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BaseLauncher.bin.gz.b64" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LauncherCS\LauncherCS.csproj" />
+  </ItemGroup>
+</Project>

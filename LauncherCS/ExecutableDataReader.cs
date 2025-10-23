@@ -8,24 +8,95 @@ namespace LauncherCS
 {
     public sealed class ExecutableDataReader
     {
-        public const int MagicNumber = 289792;
+        private const int LegacyOffset = 289792;
+        private const uint FooterMagic = 0x464C434D; // "MLCF"
+        private const int FooterSize = sizeof(int) + sizeof(uint);
 
         public LauncherConfiguration LoadConfiguration(string executablePath)
         {
             using var exe = File.OpenRead(executablePath);
-            if (exe.Length <= MagicNumber)
+            if (TryLoadFooterConfiguration(exe, out var configuration))
+            {
+                return configuration;
+            }
+
+            exe.Position = 0;
+            return LoadLegacyConfiguration(exe);
+        }
+
+        private static bool TryLoadFooterConfiguration(Stream executableStream, out LauncherConfiguration configuration)
+        {
+            configuration = null!;
+            if (executableStream.Length <= FooterSize)
+            {
+                return false;
+            }
+
+            executableStream.Seek(-FooterSize, SeekOrigin.End);
+            Span<byte> footer = stackalloc byte[FooterSize];
+            if (executableStream.Read(footer) != FooterSize)
+            {
+                return false;
+            }
+
+            int length = BitConverter.ToInt32(footer[..sizeof(int)]);
+            uint magic = BitConverter.ToUInt32(footer[sizeof(int)..]);
+
+            if (magic != FooterMagic || length <= 0)
+            {
+                return false;
+            }
+
+            long dataStart = executableStream.Length - FooterSize - length;
+            if (dataStart < 0)
+            {
+                return false;
+            }
+
+            executableStream.Position = dataStart;
+            using var rawData = new MemoryStream();
+            CopyBytes(executableStream, rawData, length);
+            rawData.Position = 0;
+
+            ResourceDecoder.EncryptDecrypt(rawData);
+            using var unpacked = ResourceDecoder.UnpackToMemory(rawData);
+            configuration = LoadFromXml(unpacked);
+            return true;
+        }
+
+        private static LauncherConfiguration LoadLegacyConfiguration(Stream executableStream)
+        {
+            if (executableStream.Length <= LegacyOffset)
             {
                 throw new InvalidOperationException("Executable does not contain embedded configuration data.");
             }
 
-            exe.Position = MagicNumber;
+            executableStream.Position = LegacyOffset;
             using var rawData = new MemoryStream();
-            exe.CopyTo(rawData);
+            executableStream.CopyTo(rawData);
             rawData.Position = 0;
 
             ResourceDecoder.EncryptDecrypt(rawData);
             using var unpacked = ResourceDecoder.UnpackToMemory(rawData);
             return LoadFromXml(unpacked);
+        }
+
+        private static void CopyBytes(Stream source, Stream destination, int bytesToCopy)
+        {
+            Span<byte> buffer = stackalloc byte[8192];
+            int remaining = bytesToCopy;
+            while (remaining > 0)
+            {
+                int toRead = Math.Min(buffer.Length, remaining);
+                int read = source.Read(buffer[..toRead]);
+                if (read <= 0)
+                {
+                    throw new EndOfStreamException("Unexpected end of stream while reading configuration data.");
+                }
+
+                destination.Write(buffer[..read]);
+                remaining -= read;
+            }
         }
 
         public static LauncherConfiguration LoadFromXml(Stream xmlStream)

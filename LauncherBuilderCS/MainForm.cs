@@ -1,8 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using LauncherBuilderCS.Attributes;
 using LauncherBuilderCS.Controls;
 using LauncherBuilderCS.Services;
 using LauncherCS;
@@ -17,10 +15,8 @@ namespace LauncherBuilderCS
         private readonly LauncherConfigurationBuilder _configurationBuilder;
         private readonly LauncherBuilderService _builderService = new();
 
-        private readonly PropertyGrid _generalGrid;
-        private readonly PropertyGrid _skinGrid;
-        private readonly Button _generalBrowseButton;
-        private readonly Button _skinBrowseButton;
+        private readonly GeneralOptionsControl _generalOptionsControl;
+        private readonly SkinOptionsControl _skinOptionsControl;
         private readonly TextBox _outputPathTextBox;
         private readonly Button _outputBrowseButton;
         private readonly Button _buildButton;
@@ -31,7 +27,6 @@ namespace LauncherBuilderCS
         private readonly ToolStripButton _loadExecutableButton;
         private readonly ToolStripButton _saveXmlButton;
 
-        private readonly OpenFileDialog _openFileDialog = new() { Filter = "All files|*.*", RestoreDirectory = true };
         private readonly OpenFileDialog _openXmlDialog = new() { Filter = "Options XML|*.xml|All files|*.*", RestoreDirectory = true };
         private readonly SaveFileDialog _saveXmlDialog = new() { Filter = "Options XML|*.xml|All files|*.*", FileName = "Options.xml", RestoreDirectory = true };
         private readonly OpenFileDialog _openExecutableDialog = new() { Filter = "Launcher executable|*.exe|All files|*.*", RestoreDirectory = true };
@@ -41,7 +36,7 @@ namespace LauncherBuilderCS
         {
             Text = "MU Launcher Builder (C#)";
             Width = 1000;
-            Height = 700;
+            Height = 720;
 
             _configurationBuilder = new LauncherConfigurationBuilder(_defaultSkin);
 
@@ -61,7 +56,6 @@ namespace LauncherBuilderCS
             _saveXmlButton.Click += (_, _) => SaveOptionsToXml();
 
             _toolStrip.Items.AddRange(new ToolStripItem[] { _loadXmlButton, _loadExecutableButton, _saveXmlButton });
-
             Controls.Add(_toolStrip);
 
             var tabControl = new TabControl
@@ -79,40 +73,11 @@ namespace LauncherBuilderCS
 
             Controls.Add(tabControl);
 
-            _generalGrid = new PropertyGrid
-            {
-                Dock = DockStyle.Fill,
-                ToolbarVisible = false,
-                PropertySort = PropertySort.Categorized
-            };
-            _generalGrid.SelectedGridItemChanged += (_, _) => UpdateBrowseButton(_generalGrid, _generalBrowseButton);
+            _generalOptionsControl = new GeneralOptionsControl { Dock = DockStyle.Fill };
+            _skinOptionsControl = new SkinOptionsControl { Dock = DockStyle.Fill };
 
-            _skinGrid = new PropertyGrid
-            {
-                Dock = DockStyle.Fill,
-                ToolbarVisible = false,
-                PropertySort = PropertySort.Categorized
-            };
-            _skinGrid.SelectedGridItemChanged += (_, _) => UpdateBrowseButton(_skinGrid, _skinBrowseButton);
-
-            _generalBrowseButton = new Button
-            {
-                Text = "Browse...",
-                AutoSize = true,
-                Enabled = false
-            };
-            _generalBrowseButton.Click += (_, _) => BrowseSelectedProperty(_generalGrid);
-
-            _skinBrowseButton = new Button
-            {
-                Text = "Browse...",
-                AutoSize = true,
-                Enabled = false
-            };
-            _skinBrowseButton.Click += (_, _) => BrowseSelectedProperty(_skinGrid);
-
-            generalTab.Controls.Add(CreatePropertyGridLayout(_generalGrid, _generalBrowseButton, "Use the browse button to select splash screen images."));
-            skinTab.Controls.Add(CreatePropertyGridLayout(_skinGrid, _skinBrowseButton, "Use the browse button to select skin images."));
+            generalTab.Controls.Add(_generalOptionsControl);
+            skinTab.Controls.Add(_skinOptionsControl);
 
             _updateControl = new UpdateBuilderControl();
             updateTab.Controls.Add(_updateControl);
@@ -161,42 +126,10 @@ namespace LauncherBuilderCS
 
             Controls.Add(bottomPanel);
 
-            _generalGrid.SelectedObject = _generalOptions;
-            _skinGrid.SelectedObject = _skinOptions;
+            _generalOptionsControl.Bind(_generalOptions);
+            _skinOptionsControl.Bind(_skinOptions);
 
             InitializeDefaults();
-            UpdateBrowseButton(_generalGrid, _generalBrowseButton);
-            UpdateBrowseButton(_skinGrid, _skinBrowseButton);
-        }
-
-        private Control CreatePropertyGridLayout(PropertyGrid grid, Button browseButton, string hint)
-        {
-            var layout = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 2,
-                Padding = new Padding(8)
-            };
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-
-            layout.Controls.Add(grid, 0, 0);
-            layout.SetColumnSpan(grid, 2);
-
-            var hintLabel = new Label
-            {
-                Text = hint,
-                AutoSize = true,
-                Anchor = AnchorStyles.Left
-            };
-
-            layout.Controls.Add(hintLabel, 0, 1);
-            layout.Controls.Add(browseButton, 1, 1);
-
-            return layout;
         }
 
         private void InitializeDefaults()
@@ -217,6 +150,11 @@ namespace LauncherBuilderCS
                 {
                     // Ignore failures and keep defaults.
                 }
+            }
+            else
+            {
+                _generalOptionsControl.RefreshValues();
+                _skinOptionsControl.RefreshValues();
             }
         }
 
@@ -341,8 +279,8 @@ namespace LauncherBuilderCS
 
             _skinOptions.UseCustomSkin = !IsDefaultSkin(skin);
 
-            _generalGrid.Refresh();
-            _skinGrid.Refresh();
+            _generalOptionsControl.RefreshValues();
+            _skinOptionsControl.RefreshValues();
         }
 
         private static void CopyLabel(LabelLayout target, LabelPosition source)
@@ -387,47 +325,6 @@ namespace LauncherBuilderCS
                    string.Equals(skin.Buttons.Close2.DataDown, _defaultSkin.CloseDown, StringComparison.Ordinal) &&
                    string.Equals(skin.Buttons.Apply.DataNormal, _defaultSkin.ApplyNormal, StringComparison.Ordinal) &&
                    string.Equals(skin.Buttons.Apply.DataDown, _defaultSkin.ApplyDown, StringComparison.Ordinal);
-        }
-
-        private void BrowseSelectedProperty(PropertyGrid grid)
-        {
-            var item = grid.SelectedGridItem;
-            if (item?.PropertyDescriptor == null)
-            {
-                return;
-            }
-
-            if (item.PropertyDescriptor.Attributes[typeof(FilePathAttribute)] is not FilePathAttribute)
-            {
-                return;
-            }
-
-            var owner = GetPropertyOwner(grid, item);
-            var currentValue = item.PropertyDescriptor.GetValue(owner) as string ?? string.Empty;
-            _openFileDialog.FileName = currentValue;
-
-            if (_openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                item.PropertyDescriptor.SetValue(owner, _openFileDialog.FileName);
-                grid.Refresh();
-            }
-        }
-
-        private static object? GetPropertyOwner(PropertyGrid grid, GridItem item)
-        {
-            var current = item;
-            while (current != null && current.GridItemType != GridItemType.Property)
-            {
-                current = current.Parent;
-            }
-
-            return current?.Parent?.Value ?? grid.SelectedObject;
-        }
-
-        private static void UpdateBrowseButton(PropertyGrid grid, Button button)
-        {
-            var descriptor = grid.SelectedGridItem?.PropertyDescriptor;
-            button.Enabled = descriptor != null && descriptor.Attributes[typeof(FilePathAttribute)] is not null;
         }
 
         private void BrowseForOutputPath()

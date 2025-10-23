@@ -24,11 +24,14 @@
     <Compile Include="Services\UpdatePackageBuilder.cs" />
     <Compile Include="Controls\UpdateBuilderControl.cs" />
     <Compile Include="Controls\UpdateProgress.cs" />
+    <Compile Include="Controls\GeneralOptionsControl.cs" />
+    <Compile Include="Controls\SkinButtonEditor.cs" />
+    <Compile Include="Controls\SkinOptionsControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\BaseLauncher.bin.gz.b64" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LauncherCS\LauncherCS.csproj" />
+    <ProjectReference Include="..\LauncherCore\LauncherCore.csproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,20 @@
+LAUNCHER	DATA "Launcher.exe"
+//CONFIG		DATA "skin.data"
+
+BMAIN		DATA "RES\bmain.bmp"
+BOPTIONS	DATA "RES\boptions.bmp"
+
+APPLY1		DATA "RES\apply1.bmp"
+APPLY2		DATA "RES\apply2.bmp"
+
+CANCEL1		DATA "RES\cancel1.bmp"
+CANCEL2		DATA "RES\cancel2.bmp"
+
+CONNECT1	DATA "RES\connect1.bmp"
+CONNECT2	DATA "RES\connect2.bmp"
+
+OPTION1		DATA "RES\option1.bmp"
+OPTION2		DATA "RES\option2.bmp"
+
+UPDATE1		DATA "RES\update1.bmp"
+UPDATE2		DATA "RES\update2.bmp"

@@ -1,0 +1,20 @@
+program Launcher;
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, UnitLauncherRecords, ExtCtrls, DIMimeStreams, md5;
+
+
+{$R *.res}
+
+var
+ UpdateData: TStream;
+begin
+  UpdateData:= TFileStream.Create('update.cfg', fmOpenReadWrite);
+  try
+    EncryptDecrypt(UpdateData); // Decrypt Data
+    UnpackData(UpdateData);      // Unpack Data
+  finally
+    UpdateData.Free;
+  end;  
+end.

@@ -1,0 +1,121 @@
+object frmLauncherOptions: TfrmLauncherOptions
+  Left = 327
+  Top = 164
+  BorderStyle = bsNone
+  ClientHeight = 448
+  ClientWidth = 519
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clBlack
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = [fsBold]
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnMouseDown = FormMouseDown
+  OnMouseMove = FormMouseMove
+  OnMouseUp = FormMouseUp
+  OnPaint = FormPaint
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lblIDText: TLabel
+    Left = 8
+    Top = 8
+    Width = 121
+    Height = 17
+    AutoSize = False
+    Transparent = True
+    WordWrap = True
+  end
+  object lblResolution: TLabel
+    Left = 8
+    Top = 56
+    Width = 121
+    Height = 17
+    AutoSize = False
+    Transparent = True
+    WordWrap = True
+  end
+  object lblSound: TLabel
+    Left = 8
+    Top = 144
+    Width = 121
+    Height = 17
+    AutoSize = False
+    Transparent = True
+    WordWrap = True
+  end
+  object eAccountID: TEdit
+    Left = 8
+    Top = 32
+    Width = 121
+    Height = 21
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+  end
+  object rbRes0: TRzRadioButton
+    Left = 8
+    Top = 80
+    Width = 89
+    Height = 17
+    Caption = '640x480'
+    Checked = True
+    TabOrder = 1
+    TabStop = True
+    Transparent = True
+  end
+  object rbRes1: TRzRadioButton
+    Left = 8
+    Top = 96
+    Width = 89
+    Height = 17
+    Caption = '800x600'
+    TabOrder = 2
+    Transparent = True
+  end
+  object rbRes2: TRzRadioButton
+    Left = 8
+    Top = 112
+    Width = 89
+    Height = 17
+    Caption = '1024x768'
+    TabOrder = 3
+    Transparent = True
+  end
+  object rbRes3: TRzRadioButton
+    Left = 8
+    Top = 128
+    Width = 89
+    Height = 17
+    Caption = '1280x1024'
+    TabOrder = 4
+    Transparent = True
+  end
+  object cbSoundONOFF: TRzCheckBox
+    Left = 8
+    Top = 160
+    Width = 137
+    Height = 17
+    Caption = 'SOUND ON/OFF'
+    State = cbUnchecked
+    TabOrder = 5
+    Transparent = True
+  end
+  object cbMusicONOFF: TRzCheckBox
+    Left = 8
+    Top = 176
+    Width = 137
+    Height = 17
+    Caption = 'MUSIC ON/OFF'
+    State = cbUnchecked
+    TabOrder = 6
+    Transparent = True
+  end
+end

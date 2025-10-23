@@ -6,12 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultItems>false</EnableDefaultItems>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="LauncherConfig.cs" />
-    <Compile Include="ResourceDecoder.cs" />
-    <Compile Include="ExecutableDataReader.cs" />
     <Compile Include="ImageButton.cs" />
     <Compile Include="Forms/MainForm.cs" />
     <Compile Include="Forms/OptionsForm.cs" />
@@ -23,5 +21,8 @@
       <Link>Options.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LauncherCore\LauncherCore.csproj" />
   </ItemGroup>
 </Project>

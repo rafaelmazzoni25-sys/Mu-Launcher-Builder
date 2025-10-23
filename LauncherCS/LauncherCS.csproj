@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="LauncherConfig.cs" />
+    <Compile Include="ResourceDecoder.cs" />
+    <Compile Include="ExecutableDataReader.cs" />
+    <Compile Include="ImageButton.cs" />
+    <Compile Include="Forms/MainForm.cs" />
+    <Compile Include="Forms/OptionsForm.cs" />
+    <Compile Include="Forms/UpdateForm.cs" />
+    <Compile Include="Forms/SplashForm.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Options.xml">
+      <Link>Options.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
